@@ -23,9 +23,9 @@ int main(int argc, char* argv[])
 					struct can_frame frame;
 					if (read(s, &frame, sizeof(frame)) == sizeof(frame)) {
 						int i;
-						printf("0x%X %d", frame.can_id, frame.can_dlc);
+						printf("0x%X %d ", frame.can_id & CAN_EFF_MASK, frame.can_dlc);
 						for (i=0; i<frame.can_dlc; i++) {
-							printf("0x%X ");
+							printf("0x%.2X ");
 						}
 						printf("\n");
 					} else {

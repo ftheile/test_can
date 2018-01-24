@@ -16,22 +16,26 @@ int main(int argc, char* argv[])
 		struct sockaddr_can addr;
 		addr.can_family = AF_CAN;
 		addr.can_ifindex = if_nametoindex("can0");
-		if (bind(s, (struct sockaddr*)&addr, sizeof(addr)) == 0) {
-			ssize_t nbytes;
-			struct can_frame frame;
-			nbytes = read(s, &frame, sizeof(frame));
-			if (nbytes == sizeof(sizeof(frame))) {
-				int i;
-				printf("0x%X %d", frame.can_id, frame.can_dlc);
-				for (i=0; i<frame.can_dlc; i++) {
-					printf("0x%X ");
+		if (addr.can_ifindex != 0) {
+			if (bind(s, (struct sockaddr*)&addr, sizeof(addr)) == 0) {
+				ssize_t nbytes;
+				struct can_frame frame;
+				nbytes = read(s, &frame, sizeof(frame));
+				if (nbytes == sizeof(sizeof(frame))) {
+					int i;
+					printf("0x%X %d", frame.can_id, frame.can_dlc);
+					for (i=0; i<frame.can_dlc; i++) {
+						printf("0x%X ");
+					}
+					printf("\n");
+				} else {
+					perror("read() error");
 				}
-				printf("\n");
 			} else {
-				perror("read() error");
+				perror("bind() error");
 			}
 		} else {
-			perror("bind() error");
+			perror("if_nametoindex() error");
 		}
 	} else {
 		perror("socket() error");

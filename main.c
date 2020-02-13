@@ -6,6 +6,7 @@
 #include <linux/can.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 
 int main(int argc, char* argv[])
 {
@@ -15,6 +16,7 @@ int main(int argc, char* argv[])
 		s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 		if (s != -1) {
 			struct sockaddr_can addr;
+			memset(&addr, 0, sizeof(addr));
 			addr.can_family = AF_CAN;
 			addr.can_ifindex = if_nametoindex(argv[1]);
 			if (addr.can_ifindex != 0) {
